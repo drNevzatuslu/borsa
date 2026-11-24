@@ -1,0 +1,47 @@
+# Yedi ajanlı borsa ekibi yapılandırması
+model:
+  ajan: claude-sonnet-5-5        # ajanların kullandığı model
+  koordinator: claude-opus-5-5   # sentezi yapan koordinatör modeli
+  max_tokens: 2000
+  web_arama: true                # Anthropic web arama aracını ajanlara aç
+
+izleme_listesi:
+  bist: [XU100.IS, THYAO.IS, ASELS.IS, GARAN.IS, AKBNK.IS, BIMAS.IS, KCHOL.IS, TUPRS.IS, EREGL.IS, SISE.IS]
+  abd: [SPY, QQQ, AAPL, MSFT, NVDA, AMZN, GOOGL, META, TSLA, JPM]
+  global: ["^GSPC", "^IXIC", "^VIX", "^GDAXI", "EEM", "GC=F", "BZ=F", "DX-Y.NYB", "TRY=X", "^TNX"]
+
+ajanlar:
+  - id: ekonomist_turkiye
+    ad: "Ekonomist 1 - Türkiye Makro"
+    prompt: ekonomist_turkiye.md
+    veri: [tcmb_evds, haberler_tr, fiyat_global]
+  - id: ekonomist_global
+    ad: "Ekonomist 2 - Küresel Makro"
+    prompt: ekonomist_global.md
+    veri: [fred, finnhub_haber, fiyat_global]
+  - id: trader_kisa_vade
+    ad: "Trader 1 - Kısa Vade / Teknik"
+    prompt: trader_kisa_vade.md
+    veri: [fiyat_bist, fiyat_abd, fiyat_global]
+  - id: trader_pozisyon
+    ad: "Trader 2 - Pozisyon / Risk"
+    prompt: trader_pozisyon.md
+    veri: [fiyat_bist, fiyat_abd, fiyat_global]
+  - id: analist_ulusal
+    ad: "Analist 1 - Ulusal (BIST)"
+    prompt: analist_ulusal.md
+    veri: [kap, fiyat_bist, haberler_tr]
+  - id: analist_uluslararasi
+    ad: "Analist 2 - Uluslararası (ABD ağırlıklı)"
+    prompt: analist_uluslararasi.md
+    veri: [fiyat_abd, fiyat_global, sec_edgar, finnhub_haber, fred]
+  - id: istihbarat_sosyal
+    ad: "Sektör, Yönetici ve Sosyal Medya İstihbaratı"
+    prompt: istihbarat_sosyal.md
+    veri: [stocktwits, reddit, x_twitter, haberler_tr, finnhub_haber, kap, sec_form4]
+
+cikti:
+  klasor: raporlar
+
+# SEC EDGAR, kim olduğunuzu belirten bir User-Agent ister. Kendi adınızı/e-postanızı .env içinde
+# SEC_USER_AGENT olarak verin; burada yalnızca yer tutucu var.
